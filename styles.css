@@ -1,0 +1,23 @@
+.key-white {
+    border-radius: 3px;
+    border: 1px solid black;
+    text-align: center;
+    z-index: 1;
+    grid-row: 1;
+}
+
+.key-black {
+    border-radius: 3px;
+    border: 1px solid black;
+    text-align: center;
+    z-index: 2;
+    grid-row: 1;
+    background-color: grey;
+}
+
+.keyboard {
+    /* display: grid;
+    grid-template-columns: 15px 10px 10px 15px;
+    grid-template-rows: 100px; */
+    display: flex;
+}
