@@ -39,7 +39,17 @@ function launchSynth() {
 
 // Синтезатор играет
 function playKey() {
-    oscillator.frequency.setValueAtTime(this.note.frequency*Math.pow(2, transposition), 0);
+    oscillator.frequency.setValueAtTime(this.note.frequency, 0);
+    console.log(this.note.frequency + ' ' + this.note.name + ' ' + this.note.octave);
+    gain.gain.value = 1;
+}
+
+// Запуск с клавиатуры
+function playKeyboard(event) {
+    console.log(event.key.toUpperCase());
+    let keyPlayed = $(`button:contains('${event.key.toUpperCase()}')`)[0];
+    console.log(keyPlayed);
+    oscillator.frequency.setValueAtTime(keyPlayed.note.frequency, 0);
     gain.gain.value = 1;
 }
 
@@ -49,57 +59,37 @@ function stopKey() {
     console.log('HUI');
 }
 
-// Расположить белую клавишу
-function placeButtonWhite(currentButton, keysCount) {
-    startingPosition = keysCount*4;
-    endPosition = 4 +  keysCount*4;
-    currentButton.style.gridColumnStart = `${startingPosition}`;
-    currentButton.style.gridColumnStart = `${endPosition}`;
-    console.log(startingPosition);
-    console.log(endPosition);
-}
-
-// Создание клавиатуры в DOM
-function loadKeyboard() {
-    let whiteKeysCount = 0;
-    let blackKeysCount = 0;
+// Задание частот
+function setFrequencies() {
     for (octave=1; octave<=4; octave++) {
         for (i=1; i<=12; i++) {
             let currentNote = new Note;
             currentNote.octave = octave;
-            if (i===1) {currentNote.name='C', currentNote.frequency = 130.81*octave}
-            else if (i===2) {currentNote.name='C#', currentNote.frequency = 138.59*octave}
-            else if (i===3) {currentNote.name='D', currentNote.frequency = 146.83*octave}
-            else if (i===4) {currentNote.name='D#', currentNote.frequency = 155.56*octave} 
-            else if (i===5) {currentNote.name='E', currentNote.frequency = 164.81*octave} 
-            else if (i===6) {currentNote.name='F', currentNote.frequency = 174.61*octave} 
-            else if (i===7) {currentNote.name='F#', currentNote.frequency = 185.00*octave} 
-            else if (i===8) {currentNote.name='G', currentNote.frequency = 196.00*octave} 
-            else if (i===9) {currentNote.name='G#', currentNote.frequency = 207.65*octave} 
-            else if (i===10) {currentNote.name='A', currentNote.frequency = 220*octave}
-            else if (i===11) {currentNote.name='A#', currentNote.frequency = 233.08*octave} 
-            else if (i===12) {currentNote.name='B', currentNote.frequency = 246.94*octave}
+            if (i===1) {currentNote.name='C', currentNote.frequency = 130.81*Math.pow(2, octave)*Math.pow(2, transposition)}
+            else if (i===2) {currentNote.name='C#', currentNote.frequency = 138.59*Math.pow(2, octave)*Math.pow(2, transposition)}
+            else if (i===3) {currentNote.name='D', currentNote.frequency = 146.83*Math.pow(2, octave)*Math.pow(2, transposition)}
+            else if (i===4) {currentNote.name='D#', currentNote.frequency = 155.56*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===5) {currentNote.name='E', currentNote.frequency = 164.81*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===6) {currentNote.name='F', currentNote.frequency = 174.61*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===7) {currentNote.name='F#', currentNote.frequency = 185.00*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===8) {currentNote.name='G', currentNote.frequency = 196.00*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===9) {currentNote.name='G#', currentNote.frequency = 207.65*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===10) {currentNote.name='A', currentNote.frequency = 220*Math.pow(2, octave)*Math.pow(2, transposition)}
+            else if (i===11) {currentNote.name='A#', currentNote.frequency = 233.08*Math.pow(2, octave)*Math.pow(2, transposition)} 
+            else if (i===12) {currentNote.name='B', currentNote.frequency = 246.94*Math.pow(2, octave)*Math.pow(2, transposition)}
             else (console.log('Note out of range WTF???;'));
             console.log(currentNote);
-            let button = document.createElement("button");
-            button.innerHTML = `${currentNote.name}${currentNote.octave}`;
-            if (currentNote.name.includes('#')) {
-                button.className = 'key key-black';
-                placeButtonWhite(button, whiteKeysCount);
-                whiteKeysCount++;
-            } else {
-                button.className = 'key key-white';
-                // placeButtonBlack(button, blackKeysCount);
-                blackKeysCount++;
-            }
+            let button = document.querySelector(`.octave-${octave}`).children[i-1];
+            button.id = `${currentNote.name}${currentNote.octave}`;
             button.note = currentNote;
-            $('.keyboard')[0].appendChild(button);
         }
     }
 }
 
 // Действия вне функций
-loadKeyboard();
+setFrequencies();
 $('.launchButton').on('click', launchSynth);
 $('.key').on('mousedown', playKey);
 $('.key').on('mouseup', stopKey);
+$('.key').on('keydown', playKeyboard);
+$('.key').on('keyup', stopKey);

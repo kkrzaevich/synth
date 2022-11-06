@@ -1,23 +1,115 @@
-.key-white {
-    border-radius: 3px;
-    border: 1px solid black;
-    text-align: center;
-    z-index: 1;
-    grid-row: 1;
+/* Синтезатор - общее */
+
+.synth {
+    display: grid;
+    grid-template-rows: auto;
 }
 
-.key-black {
-    border-radius: 3px;
-    border: 1px solid black;
-    text-align: center;
-    z-index: 2;
-    grid-row: 1;
-    background-color: grey;
-}
+    /* Ручки */
 
-.keyboard {
-    /* display: grid;
-    grid-template-columns: 15px 10px 10px 15px;
-    grid-template-rows: 100px; */
-    display: flex;
-}
+    .knobs {
+        grid-row-start: 1;
+        grid-row-end: 2;      
+    }
+
+    /* Клавиатура */
+
+    .keyboard {
+        display: flex;
+        grid-row-start: 2;
+        grid-row-end: 3;
+    }
+
+        .key-white {
+            border-radius: 3px;
+            border: 1px solid black;
+            text-align: center;
+            z-index: 1;
+            grid-row: 1;
+            grid-row-start: 1;
+            grid-row-end: 3;
+            background-color: white;
+        }
+
+        .key-black {
+            border-radius: 3px;
+            border: 1px solid black;
+            text-align: center;
+            z-index: 2;
+            grid-row: 1;
+            background-color: grey;
+            grid-row-start: 1;
+            grid-row-end: 2;
+        }
+
+        .octave {
+            display:grid;
+            grid-template-columns:
+            /* from C to E */
+            30px 10px 10px 20px 10px 10px 30px
+            /* from F to B */
+            30px 10px 10px 20px 10px 10px 20px 10px 10px 30px;
+            grid-template-rows: 80px 50px;
+        }
+
+        /* Расположение клавиш внутри октавы */
+
+        .c-key {
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .csh-key {
+            grid-column-start: 2;
+            grid-column-end: 4;
+        }
+
+        .d-key {
+            grid-column-start: 3;
+            grid-column-end: 6;
+        }
+
+        .dsh-key {
+            grid-column-start: 5;
+            grid-column-end: 7;
+        }
+
+        .e-key {
+            grid-column-start: 6;
+            grid-column-end: 8;
+        }
+
+        .f-key {
+            grid-column-start: 8;
+            grid-column-end: 10;
+        }
+
+        .fsh-key {
+            grid-column-start: 9;
+            grid-column-end: 11;
+        }
+
+        .g-key {
+            grid-column-start: 10;
+            grid-column-end: 13;
+        }
+
+        .gsh-key {
+            grid-column-start: 12;
+            grid-column-end: 14;
+        }
+
+        .a-key {
+            grid-column-start: 13;
+            grid-column-end: 16;
+        }
+
+        .ash-key {
+            grid-column-start: 15;
+            grid-column-end: 17;
+        }
+
+        .b-key {
+            grid-column-start: 16;
+            grid-column-end: 18;
+        }
