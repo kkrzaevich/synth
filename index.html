@@ -13,9 +13,23 @@
 
 <body>
     <div class="synth">
-        <div class="knobs">
-            <button class="launchButton">Launch synth</button>
+        <div class="controls">
+            <div class="oscType">
+                <input type="range" id="oscType" name="oscType" min="0" value="0" max="99" step="33">
+                <label for="oscType" id="oscTypeLabel">Sine</label>
+            </div>
+            <div class="ADSR">
+                <input type="range" id="attack" name="oscType" min="0" value="2" max="100" step="1">
+                <label for="attack" id="attackLabel">A</label>
+                <input type="range" id="decay" name="oscType" min="0" value="0" max="100" step="1">
+                <label for="decay" id="decayLabel">D</label>
+                <input type="range" id="sustain" name="oscType" min="0" value="100" max="100" step="1">
+                <label for="sustain" id="sustainLabel">S</label>
+                <input type="range" id="release" name="oscType" min="0" value="10" max="100" step="1">
+                <label for="release" id="releaseLabel">R</label>
+            </div>
         </div>
+
         <div class="keyboard">
             <div class="octave octave-1">
                 <button class="key key-white c-key"></button>

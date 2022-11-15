@@ -47,6 +47,34 @@ function setFrequencies() {
 
 // Действия вне функций
 setFrequencies();
+var oscType;
+
+// Выбор осциллятора
+
+$('#oscType').on('change', function() {
+    switch (this.value) {
+        case "0":
+            oscType = "sine";
+            $('#oscTypeLabel')[0].innerText = 'Sine';
+            break;
+        case "33":
+            oscType = "triangle";
+            $('#oscTypeLabel')[0].innerText = 'Triangle';
+            break;
+        case "66":
+            oscType = "square";
+            $('#oscTypeLabel')[0].innerText = 'Square';
+            break;
+        case "99":
+            oscType = "sawtooth";
+            $('#oscTypeLabel')[0].innerText = 'Sawtooth';
+            break;  
+        default:
+            oscType = "sine";
+            $('#oscTypeLabel')[0].innerText = 'Sine';
+            break;
+    };
+});
 
 // При игре клавиатурой
 
@@ -63,12 +91,14 @@ $('.key').on('keydown', function(event) {
                 document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator.connect(gain);
                 document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator.start(0);
                 document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator.frequency.setValueAtTime(currentFrequency, 0);
-                document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator.type = 'sine';
+                document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator.type = oscType;
+                document.querySelector(`#key${event.key.toUpperCase()}`).classList.add("pressed");
                 console.log('adding ' + document.querySelector(`#key${event.key.toUpperCase()}`).note.frequency);
                 this.addEventListener('keyup', function(event) {
                     if (typeof document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator !== 'undefined') {
                         console.log('deleting ' + document.querySelector(`#key${event.key.toUpperCase()}`).note.frequency);
                         document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator.stop(0);
+                        document.querySelector(`#key${event.key.toUpperCase()}`).classList.remove("pressed");
                         delete document.querySelector(`#key${event.key.toUpperCase()}`).note.oscillator;
                     }
                 });
@@ -81,16 +111,21 @@ $('.key').on('keydown', function(event) {
 
 $('.key').on('mousedown mouseover', function(event) {
     if (event.buttons == 1 || event.buttons == 3) {
-        currentFrequency = this.note.frequency;
-        this.note.oscillator = context.createOscillator();
-        this.note.oscillator.connect(gain);
-        this.note.oscillator.start(0);
-        this.note.oscillator.frequency.setValueAtTime(currentFrequency, 0);
-        this.note.oscillator.type = 'sine';
-        console.log(event);
-        $('.key').on('mouseup mouseout', function (event) { 
-            this.note.oscillator.stop(0);
-            delete this.note.oscillator;
-        });
+        if (this.note.oscillator !== 'indefined') {
+            currentFrequency = this.note.frequency;
+            this.note.oscillator = context.createOscillator();
+            this.note.oscillator.connect(gain);
+            this.note.oscillator.start(0);
+            this.note.oscillator.frequency.setValueAtTime(currentFrequency, 0);
+            this.classList.add("pressed");
+            this.note.oscillator.type = oscType;
+            $('.key').on('mouseup mouseout', function (event) { 
+                this.note.oscillator.stop(0);
+                delete this.note.oscillator;
+                this.classList.remove("pressed");
+                // this.removeClass('.pressed');
+            });
+        }
+
     }
 })

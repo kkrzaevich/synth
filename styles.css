@@ -7,9 +7,21 @@
 
     /* Ручки */
 
-    .knobs {
+    .controls {
         grid-row-start: 1;
         grid-row-end: 2;      
+    }
+
+    .oscType {  
+        margin: 10px;
+        border: 2px solid black;
+        border-radius: 5px;
+    }
+
+    .ADSR {  
+        margin: 10px;
+        border: 2px solid black;
+        border-radius: 5px;
     }
 
     /* Клавиатура */
@@ -112,4 +124,8 @@
         .b-key {
             grid-column-start: 16;
             grid-column-end: 18;
+        }
+
+        .pressed {
+            background-color: blue;
         }
