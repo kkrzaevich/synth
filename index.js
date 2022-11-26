@@ -8,8 +8,13 @@ var release = 0.1;
 var sustain = 1;
 var decay = 1;
 var oscType = 'sine';
-var volume = 0.2;
+var volume = 0.1;
+// Задаем транспозицию
 var transposition = -1;
+// Задаем частоту среза фильтра
+var filterFreq = 500;
+// Задаем ширину стерео панорамы
+var stereoWidth = 0;
 
 // Задаем число шагов изменения громкости по атаке, релизу и декея отдельно
 // 	Если атака/релиз/декей очень короткие, шагов нужно мало
@@ -59,17 +64,13 @@ setReleaseParams();
 setDecayParams();
 
 
-
 // Создаем аудио контекст
 const context = new AudioContext();
 
 
-
-
-
 // Создаем класс с музыкой, чтобы присвоить его кнопке
 class Music {
-    constructor(oscillator, gain, frequency, phase, name, octave) {
+    constructor(oscillator, gain, frequency, phase, name, octave, filter, stereoPan) {
         // 	Осциллятор
         this.oscillator = oscillator;
         // 	Гейн
@@ -82,6 +83,10 @@ class Music {
         this.name = name;
         // Номер октавы
         this.octave = octave;
+        // Фильтр
+        this.filter = filter;
+        // Стерео панорама
+        this.stereoPan = stereoPan;
     }
     changePhase(input) {
         this.phase = input;
@@ -185,6 +190,7 @@ class Music {
                             // 	Через короткий промежуток времени останавливаем и удаляем осциллятор
                             setTimeout(function () {
                                 scope.oscillator.stop(0);
+                                scope.oscillator.disconnect(0);
                                 delete scope.oscillator;
                                 console.log('WE DELETE OSCILLATOR');
                             }, 2 * decayTimeStep);
@@ -222,6 +228,7 @@ class Music {
                 // 	Через короткий промежуток времени останавливаем и удаляем осциллятор
                 setTimeout(function () {
                     scope.oscillator.stop(0);
+                    scope.oscillator.disconnect();
                     delete scope.oscillator;
                     console.log('WE DELETE OSCILLATOR');
                 }, 2 * releaseTimeStep);
@@ -238,8 +245,30 @@ class Music {
 // Задаем частоты - вызов функции
 setFrequencies();
 
+// Задаем фильтры
+function setFilters() {
+    for (octave = 1; octave <= 4; octave++) {
+        for (i = 1; i <= 12; i++) {
+            document.querySelector(`.octave-${octave}`).children[i - 1].music.filter.frequency.value = filterFreq;
+        }
+}
+}
+
+// Задаем стерео панораму
+function setStereoWidth() {
+    let count = 1;
+    for (octave = 1; octave <= 4; octave++) {
+        for (i = 1; i <= 12; i++) {
+            document.querySelector(`.octave-${octave}`).children[i - 1].music.stereoPan.pan.value = (-1+count/24)*stereoWidth;
+            console.log(document.querySelector(`.octave-${octave}`).children[i - 1].music.stereoPan.pan.value);
+            count++;
+        }
+    }
+}
+
 // Задание частот - функция
 function setFrequencies() {
+    let count = 1;
     for (octave = 1; octave <= 4; octave++) {
         for (i = 1; i <= 12; i++) {
             let currentNote = new Music;
@@ -264,8 +293,22 @@ function setFrequencies() {
             // Создаем гейн для кнопки, приравниваем к нулю
             button.music.gain = context.createGain();
             button.music.gain.gain.value = 0;
-            // Соединяем гейн с аудио контекстом
-            button.music.gain.connect(context.destination);
+            // Создаем фильтр для кнопки, приравниваем к заданной частоте
+            button.music.filter = context.createBiquadFilter();
+            button.music.filter.type = 'lowpass';
+            button.music.filter.frequency.value = filterFreq;            
+            // Соединяем гейн с фильтром
+            button.music.gain.connect(button.music.filter);
+            // Создаем паннер
+            button.music.stereoPan = context.createStereoPanner();
+            button.music.stereoPan.pan.value = (-1+count/24)*stereoWidth;
+            console.log('Frequency value is ' + button.music.frequency + '. Pan value is ' + button.music.stereoPan.pan.value + ' Count is ' + count)
+            console.log(button.music);
+            // Соединяем фильтр с паннером
+            button.music.filter.connect(button.music.stereoPan);
+            // Соединяем паннер с аудио контекстом
+            button.music.stereoPan.connect(context.destination);
+            count++;
         }
     }
 }
@@ -349,6 +392,25 @@ $('#release').on('change', function () {
     setReleaseParams();
 });
 
+// Присваиваем ползунку значение частоты фильтра
+$('#filter').value = filterFreq;
+$('#filterLabel')[0].innerText = filterFreq;
+setFilters();
+// Выбор фильтра
+// Если двигается ползунок, меняем релиз
+$('#filter').on('change', function () {
+    filterFreq = this.value;
+    $('#filterLabel')[0].innerText = this.value;
+    setFilters();
+});
+
+// Выбор стерео панорамы
+$('#stereo').on('change', function () {
+    stereoWidth = this.value;
+    $('#stereoLabel')[0].innerText = this.value;
+    setStereoWidth();
+});
+
 // ИГРА МЫШЬЮ: При нажатии на кнопку
 $('.key').on('mousedown mouseover', function (event) {
     // Если у нас зажата кнопка
@@ -366,6 +428,7 @@ $('.key').on('mousedown mouseover', function (event) {
         };
         // Красим кнопку
         this.classList.add("pressed");
+        console.log(filter.frequency)
     }
 });
 
@@ -383,6 +446,7 @@ $('.key').on('mouseup mouseout', function (event) {
         // Если гейн меньше или равен нулю, останавливаем и удаляем осциллятор.
         if (this.music.gain.gain.value <= 0) {
             scope.music.oscillator.stop(0);
+            scope.music.oscillator.disconnect();
             delete scope.music.oscillator;
             console.log('WE DELETE OSCILLATOR');
         } else {
@@ -433,6 +497,7 @@ $('.key').on('keyup', function (event) {
         // Если гейн меньше или равен нулю, останавливаем и удаляем осциллятор.
         if (thisKey.music.gain.gain.value <= 0) {
             thisKey.music.oscillator.stop(0);
+            thisKey.music.oscillator.disconnect();
             delete thisKey.music.oscillator;
             console.log('WE DELETE OSCILLATOR');
         } else {
