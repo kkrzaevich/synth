@@ -63,10 +63,23 @@ setAttackParams();
 setReleaseParams();
 setDecayParams();
 
-
 // Создаем аудио контекст
 const context = new AudioContext();
-
+// Создаем ноды, связанные с делеем
+// создаем делей и присваиваем исходное время
+let delayNode = context.createDelay();
+delayNode.delayTime.value = 0.3;
+// создаем фидбек и присваиваем исходное значение
+let delayFeedback = context.createGain();
+delayFeedback.gain.value = 0.5;
+// создаем гейн для делея
+let delayGain = context.createGain();
+delayGain.gain.value = 0.5;
+// соединяем связанные с делеем ноды
+delayNode.connect(delayGain);
+delayNode.connect(delayFeedback);
+delayFeedback.connect(delayNode);
+delayGain.connect(context.destination);
 
 // Создаем класс с музыкой, чтобы присвоить его кнопке
 class Music {
@@ -306,7 +319,8 @@ function setFrequencies() {
             console.log(button.music);
             // Соединяем фильтр с паннером
             button.music.filter.connect(button.music.stereoPan);
-            // Соединяем паннер с аудио контекстом
+            // Соединяем паннер с аудио контекстом и с делеем
+            button.music.stereoPan.connect(delayNode);
             button.music.stereoPan.connect(context.destination);
             count++;
         }
@@ -409,6 +423,29 @@ $('#stereo').on('change', function () {
     stereoWidth = this.value;
     $('#stereoLabel')[0].innerText = this.value;
     setStereoWidth();
+});
+
+// Выбор транспозиции
+$('#transpose').on('change', function () {
+    transposition = this.value - 1;
+    $('#transposeLabel')[0].innerText = this.value;
+    setFrequencies();
+});
+
+// задаем время делея ползунком
+$('#delayTime').on('change', function () {
+    delayNode.delayTime.value = document.getElementById('delayTime').value;
+    $('#delayTimeLabel')[0].innerText = this.value;
+});
+// задаем гейн фидбека ползунком
+$('#delayFeedback').on('change', function () {
+    delayFeedback.gain.value = document.getElementById('delayFeedback').value;
+    $('#delayFeedbackLabel')[0].innerText = this.value;
+});
+// задаем гейн делея ползунком
+$('#delayVolume').on('change', function () {
+    delayGain.gain.value = document.getElementById('delayVolume').value;
+    $('#delayVolumeLabel')[0].innerText = this.value;
 });
 
 // ИГРА МЫШЬЮ: При нажатии на кнопку
