@@ -1,6 +1,3 @@
-
-// ПРОБЛЕМЫ. ФУНКЦИИ ПЫТАЮТСЯ ОБРАТИТЬСЯ К КНОПКЕ. А НАДО К ОСЦИЛЛЯТОРУ. СДЕЛАТЬ ЧЕРНОВОЙ ЭСКИЗ
-
 // Глобально
 // Задаем атаку, релиз, дикей, тип осциллятора, громкость
 var attack = 0.001;
@@ -354,31 +351,52 @@ $('#oscType').on('change', function () {
     };
 });
 
+// Вызываем обновление значения ползунков при загрузке страницы
+$(document).ready(setFaders());
+
 // Присваиваем значения ползунков
-$(document).ready(function () {
+function setFaders() {
     // Присваиваем ползунку значение атаки
-    $('#attack').value = attack;
-    $('#attackLabel')[0].innerText = attack;
+    $('#attack')[0].value = attack;
+    $('#attackLabel')[0].innerText = attack.toFixed(2);
     setAttackParams();
     // Присваиваем ползунку значение дикея
-    $('#decay').value = decay;
-    $('#decayLabel')[0].innerText = decay;
+    $('#decay')[0].value = decay;
+    $('#decayLabel')[0].innerText = decay.toFixed(2);
     setDecayParams();
     // Присваиваем ползунку значение сустейна
-    $('#sustain').value = sustain;
-    $('#sustainLabel')[0].innerText = sustain;
+    $('#sustain')[0].value = sustain;
+    $('#sustainLabel')[0].innerText = sustain.toFixed(2);
     setDecayParams();
     // Присваиваем ползунку значение релиза
-    $('#release').value = release;
-    $('#releaseLabel')[0].innerText = release;
+    $('#release')[0].value = release;
+    $('#releaseLabel')[0].innerText = release.toFixed(2);
     setReleaseParams();
-});
+    // Присваиваем значение типа осциллятора
+    
+    // Присваиваем значение частоты фильтра
+    $('#filter')[0].value = filterFreq;
+    $('#filterLabel')[0].innerText = filterFreq;
+    // Присваиваем значение стерео ширины
+    $('#stereo')[0].value = stereoWidth;
+    $('#stereoLabel')[0].innerText = stereoWidth.toFixed(2);
+    // Присваиваем значение транспозиции
+    $('#transpose')[0].value = transposition;
+    $('#transposeLabel')[0].innerText = transposition;
+    // Присваиваем значение параметров делея (громкость, время, фидбек)
+    $('#delayVolume')[0].value = delayGain.gain.value;
+    $('#delayVolumeLabel')[0].innerText = delayGain.gain.value.toFixed(2);
+    $('#delayTime')[0].value = delayNode.delayTime.value;
+    $('#delayTimeLabel')[0].innerText = delayNode.delayTime.value.toFixed(2);
+    $('#delayFeedback')[0].value = delayFeedback.gain.value;
+    $('#delayFeedbackLabel')[0].innerText = delayFeedback.gain.value.toFixed(2);
+};
 
 // Выбор атаки
 // Если двигается ползунок, меняем атаку
 $('#attack').on('change', function () {
     attack = this.value;
-    $('#attackLabel')[0].innerText = this.value;
+    $('#attackLabel')[0].innerText = Number(this.value).toFixed(2);
     setAttackParams();
 });
 
@@ -386,7 +404,7 @@ $('#attack').on('change', function () {
 // Если двигается ползунок, меняем дикей
 $('#decay').on('change', function () {
     decay = this.value;
-    $('#decayLabel')[0].innerText = this.value;
+    $('#decayLabel')[0].innerText = Number(this.value).toFixed(2);
     setDecayParams();
 });
 
@@ -394,7 +412,7 @@ $('#decay').on('change', function () {
 // Если двигается ползунок, меняем сустейн
 $('#sustain').on('change', function () {
     sustain = this.value;
-    $('#sustainLabel')[0].innerText = this.value;
+    $('#sustainLabel')[0].innerText = Number(this.value).toFixed(2);
     setDecayParams();
 });
 
@@ -402,7 +420,7 @@ $('#sustain').on('change', function () {
 // Если двигается ползунок, меняем релиз
 $('#release').on('change', function () {
     release = this.value;
-    $('#releaseLabel')[0].innerText = this.value;
+    $('#releaseLabel')[0].innerText = Number(this.value).toFixed(2);
     setReleaseParams();
 });
 
@@ -411,7 +429,7 @@ $('#filter').value = filterFreq;
 $('#filterLabel')[0].innerText = filterFreq;
 setFilters();
 // Выбор фильтра
-// Если двигается ползунок, меняем релиз
+// Если двигается ползунок, меняем частоту среза
 $('#filter').on('change', function () {
     filterFreq = this.value;
     $('#filterLabel')[0].innerText = this.value;
@@ -421,7 +439,7 @@ $('#filter').on('change', function () {
 // Выбор стерео панорамы
 $('#stereo').on('change', function () {
     stereoWidth = this.value;
-    $('#stereoLabel')[0].innerText = this.value;
+    $('#stereoLabel')[0].innerText = Number(this.value).toFixed(2);
     setStereoWidth();
 });
 
@@ -435,17 +453,17 @@ $('#transpose').on('change', function () {
 // задаем время делея ползунком
 $('#delayTime').on('change', function () {
     delayNode.delayTime.value = document.getElementById('delayTime').value;
-    $('#delayTimeLabel')[0].innerText = this.value;
+    $('#delayTimeLabel')[0].innerText = Number(this.value).toFixed(2);
 });
 // задаем гейн фидбека ползунком
 $('#delayFeedback').on('change', function () {
     delayFeedback.gain.value = document.getElementById('delayFeedback').value;
-    $('#delayFeedbackLabel')[0].innerText = this.value;
+    $('#delayFeedbackLabel')[0].innerText = Number(this.value).toFixed(2);
 });
 // задаем гейн делея ползунком
 $('#delayVolume').on('change', function () {
     delayGain.gain.value = document.getElementById('delayVolume').value;
-    $('#delayVolumeLabel')[0].innerText = this.value;
+    $('#delayVolumeLabel')[0].innerText = Number(this.value).toFixed(2);
 });
 
 // ИГРА МЫШЬЮ: При нажатии на кнопку
@@ -549,3 +567,27 @@ $('.key').on('keyup', function (event) {
     // Убираем краску с кнопки
     thisKey.classList.remove("pressed");
 });
+
+// Создаем объект для пресета
+class Preset {
+    constructor(name, attack, decay, sustain, release, filter, 
+        stereoWidth, transposition, delayVolume, delayTime, delayFeedback) {
+        this.name = name;
+        this.attack = attack;
+        this.decay = decay;
+        this.sustain = sustain;
+        this.release = release;
+        this.filter = filter;
+        this.stereoWidth = stereoWidth;
+        this.transposition = transposition;
+        this.delayVolume = delayVolume;
+        this.delayTime = delayTime;
+        this.delayFeedback = delayFeedback;
+    }
+    // метод для передачи параметров объекта в глобальные
+    
+    // метод для чтения параметров из джейсона
+}
+
+// создать объект
+// передать параметры

@@ -1,35 +1,143 @@
+/* Шрифты */
+body {
+    font-family: 'Noto Sans', sans-serif;
+    color: black;
+    background-color: white;
+}
+
+/* Стили слайдеров */
+
+input[type="range"] {
+    filter: grayscale(100%);
+    transition:  filter 0.2s ease-in-out;
+}
+
+input[type="range"]:hover {
+    filter: none;
+}
+
 /* Синтезатор - общее */
 
 .synth {
     display: grid;
     grid-template-rows: auto;
+    grid-template-columns: 80px 380px 380px 380px 80px;
+    width: 1300px;
+
+    border: 2px solid black;
+    border-radius: 6px;
+
+    background-color: white;
+
+    margin: auto;
+
+    box-shadow: 0px 0px 200px 0px rgb(252, 252, 252);
 }
+
+
+    /* Пресеты */
+
+    .presets {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 3;
+        grid-column-end: 4;
+
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: 1fr 3fr 1fr;
+
+        text-align: center;
+    }
+
+            .presets button {
+                background-color: transparent;
+                border: none;
+                font-size: 1rem;
+                color: black;
+                transition: color 0.2s;
+            }
+
+            .presets button:hover {
+                color: rgb(55, 147, 255);
+            }
+
+            .presets button:active {
+                filter: contrast(200%);
+            }
+
+        .arrow-left {
+            grid-row-start: 1;
+            grid-row-end: 2;
+            grid-column-start: 1;
+            grid-column-end: 2;
+
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .preset-field {
+            grid-row-start: 1;
+            grid-row-end: 2;
+            grid-column-start: 2;
+            grid-column-end: 3;
+        }
+
+        .arrow-right {
+            grid-row-start: 1;
+            grid-row-end: 2;
+            grid-column-start: 3;
+            grid-column-end: 4;
+
+            margin-top: auto;
+            margin-bottom: auto;
+        }
 
     /* Ручки */
 
     .controls {
-        grid-row-start: 1;
-        grid-row-end: 2;      
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 2;
+        grid-column-end: 5;
+
+
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: 1fr 3fr 3fr 3fr 1fr;
+
+        margin-bottom: 30px;
     }
 
-    .oscType {  
-        margin: 10px;
-        border: 2px solid black;
-        border-radius: 5px;
-    }
+        .base-controls {
+            grid-column-start: 2;
+            grid-column-end: 3;
+        }
 
-    .ADSR {  
-        margin: 10px;
-        border: 2px solid black;
-        border-radius: 5px;
-    }
+        .ADSR {
+            grid-column-start: 3;
+            grid-column-end: 4;
+        }
+        
+        .delay {
+            grid-column-start: 4;
+            grid-column-end: 5;
+        }
 
     /* Клавиатура */
 
     .keyboard {
         display: flex;
-        grid-row-start: 2;
-        grid-row-end: 3;
+        grid-row-start: 3;
+        grid-row-end: 4;
+        grid-column-start: 2;
+        grid-column-end: 5;
+
+        border: 2px solid black;
+        border-radius: 3px;
+        margin: auto;
+
+        background-color: #F8F0DF;
     }
 
         .key-white {
@@ -41,6 +149,9 @@
             grid-row-start: 1;
             grid-row-end: 3;
             background-color: white;
+            color: black;
+            font-family: 'Noto Sans', sans-serif;
+            transition: background-color 0.2s;
         }
 
         .key-black {
@@ -49,9 +160,12 @@
             text-align: center;
             z-index: 2;
             grid-row: 1;
-            background-color: grey;
+            background-color: rgb(102,102,102);
             grid-row-start: 1;
             grid-row-end: 2;
+            color: black;
+            font-family: 'Noto Sans', sans-serif;
+            transition: background-color 0.2s;
         }
 
         .octave {
@@ -127,5 +241,5 @@
         }
 
         .pressed {
-            background-color: blue;
+            background-color: rgb(55, 147, 255);
         }

@@ -6,18 +6,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+    <title>Synthesizer</title>
+    <script src="https://kit.fontawesome.com/632ed55f0a.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
 
     <body>
         <div class="synth">
+            <div class="presets">
+                <div class="arrow-left">
+                    <button id="arrow-left">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+                <div class="preset">
+                    <p id="preset-field">Preset name</p>
+                </div>
+                <div class="arrow-right">
+                    <button id="arrow-right">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
             <div class="controls">
-                <div class="oscType">
+
+                <div class="base-controls">
+                    <p>Oscillator type</p>
                     <input type="range" id="oscType" name="oscType" min="0" value="0" max="99" step="33">
                     <label for="oscType" id="oscTypeLabel">Sine</label>
+                    <p>Filter cutoff frequency</p>
+                    <input type="range" id="filter" name="filter" min="0" value="20000" max="20000" step="1">
+                    <label for="filter" id="filterLabel">20000</label>
+                    <p>Stereo width</p>
+                    <input type="range" id="stereo" name="stereo" min=0 value=0 max=2 step="any">
+                    <label for="stereo" id="stereoLabel">0</label>
+                    <p>Transpose</p>
+                    <input type="range" id="transpose" name="transpose" min=-2 value=0 max=2 step="1">
+                    <label for="transpose" id="transposeLabel">0</label>
                 </div>
                 <div class="ADSR">
                     <p>Attack</p>
@@ -33,22 +64,7 @@
                     <input type="range" id="release" name="release" min="0.015" value="1" max="5" step="0.1">
                     <label for="release" id="releaseLabel">R</label>
                 </div>
-                <div class="Filter">
-                    <p>Filter</p>
-                    <input type="range" id="filter" name="filter" min="0" value="20000" max="20000" step="1">
-                    <label for="filter" id="filterLabel">20000</label>
-                </div>
-                <div class="Stereo">
-                    <p>Stereo width</p>
-                    <input type="range" id="stereo" name="stereo" min=0 value=0 max=2 step="any">
-                    <label for="stereo" id="stereoLabel">0</label>
-                </div>
-                <div class="Transpose">
-                    <p>Transpose</p>
-                    <input type="range" id="transpose" name="transpose" min=-2 value=0 max=2 step="1">
-                    <label for="transpose" id="transposeLabel">0</label>
-                </div>
-                <div class="Delay">
+                <div class="delay">
                     <p>Delay volume</p>
                     <input type="range" id="delayVolume" name="delayVolume" min=0 value=0.5 max=0.99 step=0.01>
                     <label for="delayVolume" id="delayVolumeLabel">0.5</label>
