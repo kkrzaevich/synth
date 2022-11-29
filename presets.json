@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Silver Skies",
+        "delayTime": 0.5,
+        "delayFeedback": 0.2,
+        "delayGain": 0.5
+    },
+    {
+        "name": "Sexy Boy",
+        "delayTime": 0.7,
+        "delayFeedback": 0.3,
+        "delayGain": 0.2
+    },
+    {
+        "name": "Burning Trees",
+        "delayTime": 0.3,
+        "delayFeedback": 0.4,
+        "delayGain": 0.6
+    }
+]
