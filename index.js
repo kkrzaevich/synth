@@ -570,9 +570,10 @@ $('.key').on('keyup', function (event) {
 
 // Создаем объект для пресета
 class Preset {
-    constructor(name, attack, decay, sustain, release, filter, 
+    constructor(name, oscType, attack, decay, sustain, release, filter, 
         stereoWidth, transposition, delayVolume, delayTime, delayFeedback) {
         this.name = name;
+        this.oscType = oscType;
         this.attack = attack;
         this.decay = decay;
         this.sustain = sustain;
@@ -585,9 +586,71 @@ class Preset {
         this.delayFeedback = delayFeedback;
     }
     // метод для передачи параметров объекта в глобальные
-    
-    // метод для чтения параметров из джейсона
+    setPresetParams() {    
+        document.getElementById('preset-field').innerText = this.name;
+        oscType = this.oscType;
+        attack = this.attack;
+        decay = this.decay;
+        sustain = this.sustain;
+        release = this.release;
+        filterFreq = this.filter;
+        stereoWidth = this.stereoWidth;
+        transposition = this.transposition;  
+        delayGain.gain.value = this.delayVolume;  
+        delayNode.delayTime.value = this.delayTime;
+        delayFeedback.gain.value = this.delayFeedback;
+        setFaders();
+        if (oscType === "sine") {
+            document.getElementById('oscType').value = '0';
+            document.getElementById('oscTypeLabel').innerText = 'Sine';
+        } else if (oscType === "triangle") {
+            document.getElementById('oscType').value = '33';
+            document.getElementById('oscTypeLabel').innerText = 'Triangle';
+        } else if (oscType === "square") {
+            document.getElementById('oscType').value = '66';
+            document.getElementById('oscTypeLabel').innerText = 'Square';
+        } else if (oscType === "sawtooth") {
+            document.getElementById('oscType').value = '99';
+            document.getElementById('oscTypeLabel').innerText = 'Sawtooth';
+        }
+        setFilters();
+        setFrequencies();
+    }
 }
 
-// создать объект
-// передать параметры
+// создаем таблицу объектов пресетов
+const presetTable = 
+[new Preset('Serene sinewaves','sine',0.001,1,1,0.81,20000,1,-1,0,0.3,0.5),
+ new Preset('Future organ','sawtooth',1,1,1,0.9,650,1,-2,0.7,0.55,0.5), 
+ new Preset('Bird songs','square',1,1,1,0.9,900,2,2,0.7,0.3,0.7),
+ new Preset('Some kind of piano','sawtooth',0.001,1.3,0,0.2,770,1,0,0.1,0.5,0.7),
+ new Preset('The fall','sawtooth',0.001,1.3,1,2.2,20000,0,-1,0.7,0.5,0.7),
+ new Preset('Sleep well','triangle',1.6,1,1,1.6,1200,0.8,-1,0.5,1,0.5),
+ new Preset('Eternity','sine',1.6,1,1,3,20000,1,0,0.85,0.9,0.8),
+ new Preset('Trumpets','sawtooth',0.1,0.2,0.2,1.1,1800,0.25,-1,0,0.3,0.5)
+];
+
+
+// создаем переменную номера данного пресета
+var currentPreset = 0;
+// выбираем пресет на странице
+presetTable[currentPreset].setPresetParams();
+
+// задаем выбор пресетов для кнопки влево
+document.getElementById('arrow-left').addEventListener('click', function() {
+    currentPreset = currentPreset - 1;
+    if (currentPreset < 0) {
+        currentPreset = presetTable.length - 1;
+    }
+    presetTable[currentPreset].setPresetParams();
+})
+
+
+// задаем выбор пресетов для кнопки вправо
+document.getElementById('arrow-right').addEventListener('click', function() {
+    currentPreset = currentPreset + 1;
+    if (currentPreset === presetTable.length) {
+        currentPreset = 0;
+    }
+    presetTable[currentPreset].setPresetParams();
+})
