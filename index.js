@@ -517,6 +517,54 @@ $('.key').on('mouseup mouseout', function (event) {
     this.classList.remove("pressed");
 });
 
+// ИГРА ТАЧПАДОМ: При нажатии на кнопку
+$('.key').on('touchstart', function (event) {
+    // Идет атака
+    // Задаем значение фазы - атака
+    console.log(this.music);
+    this.music.changePhase('attack');
+    console.log('phase set to attack. the phase is ' + this.music.phase);
+
+    // Идет сустейн
+    if (this.music.phase === 'sustain') {
+        // Ничего не делаем
+        console.log('This is sustain. Loudness is ' + scope.music.gain.gain.value);
+    };
+    // Красим кнопку
+    this.classList.add("pressed");
+    console.log(filter.frequency)
+});
+
+// ИГРА ТАЧПАДОМ: При отжатии кнопки
+$('.key').on('touchend', function (event) {
+    // Задаем this в переменную, чтобы пользоваться из вложенных функций
+    let scope = this;
+
+    // ЕСЛИ НЕТ ОСЦИЛЛЯТОРА
+    if (typeof this.music.oscillator === 'undefined') {
+        // Ничего не делаем. Выдаем ошибку в консоль
+        console.log('Error. Oscillator does not exist');
+    } else {
+        // ЕСЛИ ЕСТЬ ОСЦИЛЛЯТОР
+        // Если гейн меньше или равен нулю, останавливаем и удаляем осциллятор.
+        if (this.music.gain.gain.value <= 0) {
+            scope.music.oscillator.stop(0);
+            scope.music.oscillator.disconnect();
+            delete scope.music.oscillator;
+            console.log('WE DELETE OSCILLATOR');
+        } else {
+            // Иначе:
+            // Высчитываем шаг релиза по громкости = текущая громкость / количество шагов релиза
+            volumeStepRelease = this.music.gain.gain.value / volumeReleaseStepsNum;
+            // Задаем значение фазы - релиз
+            this.music.changePhase('release');
+            console.log('phase set to release. the phase is ' + this.music.phase);
+        }
+    }
+    // Убираем краску с кнопки
+    this.classList.remove("pressed");
+});
+
 // ИГРА КЛАВИАТУРОЙ: При нажатии кнопки
 $('.key').on('keydown', function (event) {
     // Определяем данную клавишу

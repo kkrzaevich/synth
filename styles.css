@@ -3,6 +3,7 @@ body {
     font-family: 'Noto Sans', sans-serif;
     color: black;
     background-color: white;
+    margin: 0;
 }
 
 /* Стили слайдеров */
@@ -16,13 +17,140 @@ input[type="range"]:hover {
     filter: none;
 }
 
+/* Для широких экранов */
+
+@media (min-width: 1300px) {
+    .synth {    grid-template-columns: 80px 380px 380px 380px 80px;
+        width: 1300px;
+    }
+
+    .keyboard { display: flex;
+        border: 2px solid black;
+        border-radius: 3px;
+        background-color: #F8F0DF;
+    }
+
+    .presets {
+        grid-column-start: 3;
+        grid-column-end: 4;
+    }
+}
+
+/* Для чуть менее широких экранов */
+
+@media (max-width: 1299px) {
+    .synth {    grid-template-columns: 5px 380px 380px 380px 5px;
+        width: 1150px;
+    }
+
+    .keyboard { display: flex;
+        border: 2px solid black;
+        border-radius: 3px;
+        background-color: #F8F0DF;
+    }
+
+    .presets {
+        grid-column-start: 3;
+        grid-column-end: 4;
+    }
+}
+
+/* Для планшетов */
+
+@media (max-width: 1149px) {
+    .synth {    grid-template-columns: 5px 300px 300px 300px 5px;
+        width: 910px;
+    }
+
+    label {
+        display: block;
+    }
+
+    .keyboard { 
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: auto;
+        border: none;
+        border-radius: 0px;
+        background-color: white;
+    }
+
+    .octave-1 {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 1;
+        grid-column-end: 2;
+        border-top: 2px solid black;
+        border-left: 2px solid black;
+        border-bottom: 2px solid black;
+        border-radius: 3px;
+    }
+
+    .octave-2 {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        grid-column-start: 2;
+        grid-column-end: 3;
+        border-top: 2px solid black;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+        border-radius: 3px;
+    }
+
+    .octave-3 {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 2;
+        border-top: 2px solid black;
+        border-left: 2px solid black;
+        border-bottom: 2px solid black;
+        border-radius: 3px;
+
+        margin-top: 30px;
+    }
+
+    .octave-4 {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 2;
+        grid-column-end: 3;
+        border-top: 2px solid black;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+        border-radius: 3px;
+        
+        margin-top: 30px;
+    }
+
+    .presets {
+        grid-column-start: 2;
+        grid-column-end: 5;
+    }
+}
+
+/* Для телефонов */
+
+@media (max-width: 909px) {
+    .synth {    grid-template-columns: 10px 185px 185px 185px 10px;
+        width: 585px;
+    }
+
+    .presets {
+        grid-column-start: 2;
+        grid-column-end: 5;
+    }
+}
+
+
 /* Синтезатор - общее */
+
 
 .synth {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: 80px 380px 380px 380px 80px;
-    width: 1300px;
+    /* grid-template-columns: 80px 380px 380px 380px 80px;
+    width: 1300px; */
 
     border: 2px solid black;
     border-radius: 6px;
@@ -40,8 +168,8 @@ input[type="range"]:hover {
     .presets {
         grid-row-start: 1;
         grid-row-end: 2;
-        grid-column-start: 3;
-        grid-column-end: 4;
+        /* grid-column-start: 3;
+        grid-column-end: 4; */
 
         display: grid;
         grid-template-rows: auto;
@@ -127,17 +255,17 @@ input[type="range"]:hover {
     /* Клавиатура */
 
     .keyboard {
-        display: flex;
+        /* display: flex; */
         grid-row-start: 3;
         grid-row-end: 4;
         grid-column-start: 2;
         grid-column-end: 5;
 
-        border: 2px solid black;
-        border-radius: 3px;
+        /* border: 2px solid black;
+        border-radius: 3px; */
         margin: auto;
 
-        background-color: #F8F0DF;
+        /* background-color: #F8F0DF; */
     }
 
         .key-white {
