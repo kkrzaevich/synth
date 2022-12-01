@@ -473,9 +473,9 @@ $('#masterVolume').on('change', function () {
 });
 
 // ИГРА МЫШЬЮ: При нажатии на кнопку
-$('.key').on('pointerover', function (event) {
+$('.key').on('pointerdown pointerover', function (event) {
     // Если у нас зажата кнопка
-    // if (event.buttons == 1 || event.buttons == 3) {
+    if (event.buttons == 1 || event.buttons == 3) {
         // Идет атака
         // Задаем значение фазы - атака
         console.log(this.music);
@@ -490,11 +490,11 @@ $('.key').on('pointerover', function (event) {
         // Красим кнопку
         this.classList.add("pressed");
         console.log(filter.frequency)
-    // }
+    }
 });
 
 // ИГРА МЫШЬЮ: При отжатии кнопки
-$('.key').on('pointerout', function (event) {
+$('.key').on('pointerup pointerout', function (event) {
     // Задаем this в переменную, чтобы пользоваться из вложенных функций
     let scope = this;
 
