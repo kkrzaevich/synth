@@ -372,8 +372,6 @@ function setFaders() {
     $('#release')[0].value = release;
     $('#releaseLabel')[0].innerText = release.toFixed(2);
     setReleaseParams();
-    // Присваиваем значение типа осциллятора
-    
     // Присваиваем значение частоты фильтра
     $('#filter')[0].value = filterFreq;
     $('#filterLabel')[0].innerText = filterFreq;
@@ -390,6 +388,9 @@ function setFaders() {
     $('#delayTimeLabel')[0].innerText = delayNode.delayTime.value.toFixed(2);
     $('#delayFeedback')[0].value = delayFeedback.gain.value;
     $('#delayFeedbackLabel')[0].innerText = delayFeedback.gain.value.toFixed(2);
+    // Присваиваем значение общей громкости
+    $('#masterVolume')[0].value = volume*10;
+    $('#masterVolumeLabel')[0].innerText = volume*10;
 };
 
 // Выбор атаки
@@ -465,11 +466,16 @@ $('#delayVolume').on('change', function () {
     delayGain.gain.value = document.getElementById('delayVolume').value;
     $('#delayVolumeLabel')[0].innerText = Number(this.value).toFixed(2);
 });
+// задаем громкость ползунком
+$('#masterVolume').on('change', function () {
+    volume = Number(document.getElementById('masterVolume').value) / 10;
+    $('#masterVolumeLabel')[0].innerText = Number(this.value).toFixed(2);
+});
 
 // ИГРА МЫШЬЮ: При нажатии на кнопку
-$('.key').on('mousedown mouseover', function (event) {
+$('.key').on('pointerover', function (event) {
     // Если у нас зажата кнопка
-    if (event.buttons == 1 || event.buttons == 3) {
+    // if (event.buttons == 1 || event.buttons == 3) {
         // Идет атака
         // Задаем значение фазы - атака
         console.log(this.music);
@@ -484,59 +490,11 @@ $('.key').on('mousedown mouseover', function (event) {
         // Красим кнопку
         this.classList.add("pressed");
         console.log(filter.frequency)
-    }
+    // }
 });
 
 // ИГРА МЫШЬЮ: При отжатии кнопки
-$('.key').on('mouseup mouseout', function (event) {
-    // Задаем this в переменную, чтобы пользоваться из вложенных функций
-    let scope = this;
-
-    // ЕСЛИ НЕТ ОСЦИЛЛЯТОРА
-    if (typeof this.music.oscillator === 'undefined') {
-        // Ничего не делаем. Выдаем ошибку в консоль
-        console.log('Error. Oscillator does not exist');
-    } else {
-        // ЕСЛИ ЕСТЬ ОСЦИЛЛЯТОР
-        // Если гейн меньше или равен нулю, останавливаем и удаляем осциллятор.
-        if (this.music.gain.gain.value <= 0) {
-            scope.music.oscillator.stop(0);
-            scope.music.oscillator.disconnect();
-            delete scope.music.oscillator;
-            console.log('WE DELETE OSCILLATOR');
-        } else {
-            // Иначе:
-            // Высчитываем шаг релиза по громкости = текущая громкость / количество шагов релиза
-            volumeStepRelease = this.music.gain.gain.value / volumeReleaseStepsNum;
-            // Задаем значение фазы - релиз
-            this.music.changePhase('release');
-            console.log('phase set to release. the phase is ' + this.music.phase);
-        }
-    }
-    // Убираем краску с кнопки
-    this.classList.remove("pressed");
-});
-
-// ИГРА ТАЧПАДОМ: При нажатии на кнопку
-$('.key').on('touchstart', function (event) {
-    // Идет атака
-    // Задаем значение фазы - атака
-    console.log(this.music);
-    this.music.changePhase('attack');
-    console.log('phase set to attack. the phase is ' + this.music.phase);
-
-    // Идет сустейн
-    if (this.music.phase === 'sustain') {
-        // Ничего не делаем
-        console.log('This is sustain. Loudness is ' + scope.music.gain.gain.value);
-    };
-    // Красим кнопку
-    this.classList.add("pressed");
-    console.log(filter.frequency)
-});
-
-// ИГРА ТАЧПАДОМ: При отжатии кнопки
-$('.key').on('touchend', function (event) {
+$('.key').on('pointerout', function (event) {
     // Задаем this в переменную, чтобы пользоваться из вложенных функций
     let scope = this;
 
@@ -619,7 +577,7 @@ $('.key').on('keyup', function (event) {
 // Создаем объект для пресета
 class Preset {
     constructor(name, oscType, attack, decay, sustain, release, filter, 
-        stereoWidth, transposition, delayVolume, delayTime, delayFeedback) {
+        stereoWidth, transposition, delayVolume, delayTime, delayFeedback, masterVolume) {
         this.name = name;
         this.oscType = oscType;
         this.attack = attack;
@@ -632,6 +590,7 @@ class Preset {
         this.delayVolume = delayVolume;
         this.delayTime = delayTime;
         this.delayFeedback = delayFeedback;
+        this.masterVolume = masterVolume;
     }
     // метод для передачи параметров объекта в глобальные
     setPresetParams() {    
@@ -647,6 +606,7 @@ class Preset {
         delayGain.gain.value = this.delayVolume;  
         delayNode.delayTime.value = this.delayTime;
         delayFeedback.gain.value = this.delayFeedback;
+        volume = this.masterVolume / 10;
         setFaders();
         if (oscType === "sine") {
             document.getElementById('oscType').value = '0';
@@ -668,14 +628,14 @@ class Preset {
 
 // создаем таблицу объектов пресетов
 const presetTable = 
-[new Preset('Serene sinewaves','sine',0.001,1,1,0.81,20000,1,-1,0,0.3,0.5),
- new Preset('Future organ','sawtooth',1,1,1,0.9,650,1,-2,0.7,0.55,0.5), 
- new Preset('Bird songs','square',1,1,1,0.9,900,2,2,0.7,0.3,0.7),
- new Preset('Some kind of piano','sawtooth',0.001,1.3,0,0.2,770,1,0,0.1,0.5,0.7),
- new Preset('The fall','sawtooth',0.001,1.3,1,2.2,20000,0,-1,0.7,0.5,0.7),
- new Preset('Sleep well','triangle',1.6,1,1,1.6,1200,0.8,-1,0.5,1,0.5),
- new Preset('Eternity','sine',1.6,1,1,3,20000,1,0,0.85,0.9,0.8),
- new Preset('Trumpets','sawtooth',0.1,0.2,0.2,1.1,1800,0.25,-1,0,0.3,0.5)
+[new Preset('Serene sinewaves','sine',0.001,1,1,0.81,20000,1,-1,0,0.3,0.5,1),
+ new Preset('Future organ','sawtooth',1,1,1,0.9,650,1,-2,0.7,0.55,0.5,1), 
+ new Preset('Bird songs','square',1,1,1,0.9,900,2,1,0.7,0.3,0.7,1),
+ new Preset('Some kind of piano','sawtooth',0.001,1.3,0,0.2,770,1,0,0.1,0.5,0.7,1),
+ new Preset('The fall','sawtooth',0.001,1.3,1,2.2,20000,0,-1,0.7,0.5,0.7,0.4),
+ new Preset('Sleep well','triangle',1.6,1,1,1.6,1200,0.8,-1,0.5,1,0.5,1),
+ new Preset('Eternity','sine',1.6,1,1,3,20000,1,0,0.85,0.9,0.8,0.4),
+ new Preset('Trumpets','sawtooth',0.1,0.2,0.2,1.1,1800,0.25,-1,0,0.3,0.5,0.5)
 ];
 
 
